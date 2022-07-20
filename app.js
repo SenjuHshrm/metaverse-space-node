@@ -3,8 +3,14 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const path = require('path')
 
 const app = express()
+
+/**
+ * server setup
+ */
+app.set('port', require('./config/port')(process.env.NODE_ENV))
 
 app.use(cors({
   origin: '*',
@@ -12,10 +18,15 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 }))
 app.use(morgan('dev'))
-app.get('/', (req, res) => {
-  res.send('This is the backend for Metaverse Space')
+app.use(express.static(path.join(__dirname, 'app')))
+
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, './app/index.html'))
 })
 
-app.listen(3000, () => {
-  console.log('Server is running at port 3000')
+app.listen(app.get('port'), () => {
+  console.log(`Server is running at port ${app.get('port')}`)
 })
+
+module.exports = app
