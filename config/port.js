@@ -1,5 +1,4 @@
 module.exports = (env) => {
-  console.log(env)
   let port = 0
   switch(env) {
     case 'development':
