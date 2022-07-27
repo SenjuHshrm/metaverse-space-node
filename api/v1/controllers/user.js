@@ -1,23 +1,33 @@
 const User = require('../../../models/User')
-
-const login = async (req, res) => {
-  try {
-    let user = await User.findOne({ username: req.body.username }).exec()
-    if(!user) return res.status(401).json({ success: false, msg: 'Invalid credentials' })
-    if(!user.comparePasswords(req.body.password)) return res.status(401).json({ success: false, msg: 'Invalid credentials' })
-    let token = user.generateToken()
-    user.refreshToken.push({ token: token.refresh, isLoggedOut: false })
-    user.markModified('refreshToken')
-    user.save()
-    return res.status(200).json({ success: true, info: token.access })
-  } catch(e) {
-    console.error(e)
-    return res.status(500).json({ success: false, msg: '' })
-  }
-}
+const UserMessage = require('../../../models/UserMessage')
+const Subscriber = require('../../../models/Subscriber')
 
 const register = (req, res) => {
-
+  let user = new User({
+    username: req.body.username,
+    email: req.body.email,
+    isSubscribed: req.body.subscribe
+  })
+  user.generatePassword(req.body.password)
+  user.saveImage(req.body.username)
+  user.save()
+    .then(newUser => {
+      if(newUser.isSubscribed) {
+        new Subscriber({
+          username: newUser.username,
+          email: newUser.email
+        }).save()
+      }
+      let token = newUser.generateToken()
+      newUser.refreshToken.push({ token: token.refresh, isLoggedOut: false, uid: token.uid })
+      newUser.markModified('refreshToken')
+      newUser.save()
+      return res.status(200).json({ success: true, token: token.access })
+    })
+    .catch(e => {
+      console.log(e)
+      return res.status(500).json({ success: false, msg: e.toString() })
+    })
 }
 
 const profile = async (req, res) => {
@@ -29,4 +39,18 @@ const profile = async (req, res) => {
   }
 }
 
-module.exports = { login, register, profile }
+const saveMessage = (req, res) => {
+  try {
+    new UserMessage({
+      name: req.body.name,
+      email: req.body.email,
+      msg: req.body.msg
+    }).save()
+    return res.status(200).json({ success: true, msg: 'success' })
+  } catch(e) {
+    console.log(e)
+    return res.status(500).json({ success: false, msg: 'error' })
+  }
+}
+
+module.exports = { register, profile, saveMessage }

@@ -6,7 +6,7 @@ const cors = require('cors')
 const path = require('path')
 const passport = require('passport')
 const app = express()
-const { v1GET, v1POST } = require('./api/v1/routes')
+const { v1GET, v1POST, v1DELETE } = require('./api/v1/routes')
 
 
 // server setup
@@ -27,6 +27,7 @@ require('./config/passport')
 // API Routes setup
 app.use('/api/v1/get', v1GET)
 app.use('/api/v1/post', v1POST)
+app.use('/api/v1/delete', v1DELETE)
 
 // Route for React Web App rendering
 app.get('/*', (req, res) => {
