@@ -4,6 +4,6 @@ const router = Router()
 const { userCtrl } = require('../controllers')
 
 router
-  .get('/profile/:id', passport.authenticate('jwt', { session: false }), userCtrl.profile)
+  .get('/profile/:id', userCtrl.profile)
 
 module.exports = router

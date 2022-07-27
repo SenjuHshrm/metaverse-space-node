@@ -1,3 +1,4 @@
 const userCtrl = require('./user')
+const authCtrl = require('./auth')
 
-module.exports = { userCtrl }
+module.exports = { userCtrl, authCtrl }
