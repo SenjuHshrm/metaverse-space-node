@@ -25,8 +25,7 @@ const register = (req, res) => {
       return res.status(200).json({ success: true, token: token.access })
     })
     .catch(e => {
-      console.log(e)
-      return res.status(500).json({ success: false, msg: e.code })
+      return res.status(500).json({ success: false, msg: e })
     })
 }
 
