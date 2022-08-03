@@ -17,7 +17,7 @@ const getLatestEvent = async (req, res) => {
     let response = {
       id: event._id,
       title: event.title,
-      description: event.description.substr(0, 200),
+      description: `${event.description.substring(0, 200)}...`,
       img: event.img,
       createdAt: date(event.createdAt, 'MMMM DD, YYYY')
     }
