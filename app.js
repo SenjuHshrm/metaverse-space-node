@@ -17,12 +17,13 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 }))
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, 'app')))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(passport.initialize())
 require('./config/passport')
+global.appRoot = path.resolve(__dirname)
 
 // API Routes setup
 app.use('/api/v1/get', v1GET)
