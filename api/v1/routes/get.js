@@ -6,7 +6,7 @@ const { userCtrl, eventCtrl } = require('../controllers')
 router
   .get('/profile/:id', userCtrl.profile)
   .get('/event/latest', eventCtrl.getLatestEvent)
-  .get('/event/all', passport.authenticate('jwt', { session: false }), eventCtrl.getAllEvents)
+  .get('/event/all/client', eventCtrl.getAllEvents)
   .get('/event/view/:id', eventCtrl.viewEvent)
 
 module.exports = router

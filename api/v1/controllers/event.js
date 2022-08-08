@@ -13,14 +13,17 @@ const getAllEvents = async (req, res) => {
 
 const getLatestEvent = async (req, res) => {
   try {
-    let event = await Event.findOne({}).sort({ createdAt: -1 }).exec()
-    let response = {
-      id: event._id,
-      title: event.title,
-      description: `${event.description.substring(0, 200)}...`,
-      img: event.img,
-      createdAt: date(event.createdAt, 'MMMM DD, YYYY')
-    }
+    let response = []
+    let event = await Event.find({}).sort({ createdAt: -1 }).limit(4).exec()
+    event.forEach(e => {
+      response.push({
+        id: e._id,
+        title: e.title,
+        description: `${e.description.substring(0, 200)}...`,
+        img: e.img,
+        createdAt: date(e.createdAt, 'MMMM DD, YYYY')
+      })
+    })
     return res.status(200).json({ success: true, info: response })
   } catch(e) {
     return res.status(500).json({ success: false, msg: '' })
